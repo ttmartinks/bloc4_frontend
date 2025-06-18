@@ -48,7 +48,6 @@ jobs:
 
       - name: Test DB connection (PostgreSQL example)
         run: |
-          run: |
           export PGPASSWORD="${{ secrets.PGPASSWORD }}"
           until pg_isready -h ${{ secrets.PGHOST }} -p ${{ secrets.PGPORT }} -U ${{ secrets.PGUSER }} -d ${{ secrets.PGDATABASE }}; do
             echo "En attente de la base de données..."
