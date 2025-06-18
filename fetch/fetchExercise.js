@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_BASE_URL_EXERCISE = "https://morning-forest-33577-012c62b17577.herokuapp.com/api/exercise";
+const API_BASE_URL_EXERCISE = "https://cesizenbackend-0b349b880511.herokuapp.com/api/exercise";
 
 // Récupérer le token JWT depuis AsyncStorage
 const getAuthHeaders = async () => {

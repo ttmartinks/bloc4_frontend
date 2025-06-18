@@ -1,5 +1,5 @@
 // queries/queriesTest.js
-const API_URL = "https://morning-forest-33577-012c62b17577.herokuapp.com/api";
+const API_URL = "https://cesizenbackend-0b349b880511.herokuapp.com/api";
 
 export const fetchTestHelloApi = async () => {
   try {

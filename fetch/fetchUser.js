@@ -1,4 +1,4 @@
-const API_BASE_URL_USER = "https://morning-forest-33577-012c62b17577.herokuapp.com/api/user";
+const API_BASE_URL_USER = "https://cesizenbackend-0b349b880511.herokuapp.com/api/user";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Récupérer un utilisateur par ID

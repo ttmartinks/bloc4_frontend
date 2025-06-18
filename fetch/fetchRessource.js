@@ -1,11 +1,11 @@
-const API_BASE_URL_RESSOURCE = "https://morning-forest-33577-012c62b17577.herokuapp.com/api/ressource";
+const API_BASE_URL_RESSOURCE = "https://cesizenbackend-0b349b880511.herokuapp.com/api/ressource";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Récupérer toutes les ressources
 export const getAllRessources = async () => {
   try {
     const response = await fetch(`${API_BASE_URL_RESSOURCE}`);
-    const data = await response.json();
+    const data = await response.json(); 
     if (!response.ok) {
       throw new Error(data.error || 'Erreur lors de la récupération des ressources.');
     }
