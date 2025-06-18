@@ -19,7 +19,7 @@ jobs:
         run: npm ci
 
       - name: Build web
-        run: npx expo export:web
+        run: npx expo export
 
       - name: Deploy to cesizen.github.io
         env:
@@ -27,7 +27,7 @@ jobs:
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          cd web-build
+          cd dist
           git init
           git remote add origin https://x-access-token:${GH_TOKEN}@github.com/cesizen/cesizen.github.io.git
           git checkout -b main
