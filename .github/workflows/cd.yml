@@ -29,7 +29,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           cd dist
           git init
-          git remote add origin https://x-access-token:${GH_TOKEN}@github.com/cesizen/cesizen.github.io.git
+          git remote add origin https://x-access-token:${GH_TOKEN}@github.com/ttmartinks/cesizen.github.io.git
           git checkout -b main
           git add .
           git commit -m "Deploy from bloc4_frontend: $GITHUB_SHA"
