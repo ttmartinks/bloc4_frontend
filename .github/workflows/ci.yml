@@ -43,7 +43,7 @@ jobs:
 
   test-api-db:
     runs-on: ubuntu-latest
-    needs: [branch-name-check, sonarqube]
+    needs: branch-name-check
     env:
       TEST_API_URL: ${{ secrets.TEST_API_URL }}
       PGPASSWORD: ${{ secrets.PGPASSWORD }}
