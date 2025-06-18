@@ -12,4 +12,4 @@ jobs:
     steps:
       - uses: peter-evans/delete-branch@v5
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GIT_TOKEN }}
