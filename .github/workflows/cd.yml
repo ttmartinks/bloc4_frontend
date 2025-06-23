@@ -34,3 +34,8 @@ jobs:
           git add .
           git commit -m "Deploy from bloc4_frontend: $GITHUB_SHA"
           git push --force origin main
+      - name: Show git status and log
+        run: |
+          cd dist
+          git status
+          git log --oneline
