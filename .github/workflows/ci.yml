@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ main ]
+
+env:
+  TEST_API_URL: ${{ secrets.TEST_API_URL }}
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  PGPASSWORD: ${{ secrets.PGPASSWORD }}
+  PGHOST: ${{ secrets.PGHOST }}
+  PGPORT: ${{ secrets.PGPORT }}
+  PGUSER: ${{ secrets.PGUSER }}
+  PGDATABASE: ${{ secrets.PGDATABASE }}
+
+jobs:
+  branch-name-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch name
+        uses: lekterable/branchlint-action@2.1.0
+        with:
+          allowed: |
+            /^feature_[a-zA-Z0-9_\-]+$/
+            /^fix_[a-zA-Z0-9_\-]+$/
+            main
+          errorMessage: "❌ Le nom de la branche doit commencer par 'feature_' ou 'fix_' (ex: feature_login, fix_bug123)."
+
+  sonarqube:
+    runs-on: ubuntu-latest
+    needs: branch-name-check
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: .
+
+  test-api-db:
+    runs-on: ubuntu-latest
+    needs: branch-name-check
+    env:
+      TEST_API_URL: ${{ secrets.TEST_API_URL }}
+      PGPASSWORD: ${{ secrets.PGPASSWORD }}
+      PGHOST: ${{ secrets.PGHOST }}
+      PGPORT: ${{ secrets.PGPORT }}
+      PGUSER: ${{ secrets.PGUSER }}
+      PGDATABASE: ${{ secrets.PGDATABASE }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test API endpoint
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$TEST_API_URL/hello")
+          if [ "$STATUS" != "200" ]; then
+            echo "API endpoint $TEST_API_URL/hello is not reachable (status $STATUS)"
+            exit 1
+          fi
+
+      - name: Test DB connection (PostgreSQL example)
+        run: |
+          until pg_isready -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" -d "$PGDATABASE"; do
+            echo "En attente de la base de données..."
+            sleep 2
+          done
+        shell: bash
