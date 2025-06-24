@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
   TextInput,
+  Platform,
 } from 'react-native';
 import { getAllRessources, createRessource } from '../fetch/fetchRessource';
 import BottomNav from './BottomNav';
@@ -65,10 +66,14 @@ export default function Ressources({ navigation }) {
     fetchRessources();
     checkUserConnection(); // Vérifier si l'utilisateur est connecté
   }, []);
+  const isWeb = Platform.OS === 'web';
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+    <View style={[styles.container, isWeb && styles.webMainContainer]}>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        style={isWeb ? styles.webScrollView : undefined}
+      >
         <Text style={styles.title}>Liste des Ressources</Text>
         <MaterialIcons
           name="library-books"
@@ -242,10 +247,18 @@ const styles = StyleSheet.create({
   ressourceTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  ressourceContent: {
+  },  ressourceContent: {
     fontSize: 14,
     color: '#555',
     marginTop: 5,
+  },
+  // Styles spécifiques au web
+  webMainContainer: {
+    height: '100vh',
+    overflow: 'hidden',
+  },
+  webScrollView: {
+    height: '100%',
+    overflow: 'auto',
   },
 });

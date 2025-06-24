@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
+  Platform,
 } from 'react-native';
 import { getAllUsers, updateUser } from '../fetch/fetchUser';
 import BottomNav from './BottomNav';
@@ -175,13 +176,15 @@ export default function AdminUser() {
               onPress={() => handleRoleFilter('Administrateur')}
             >
               <Text style={styles.filterButtonText}>Administrateur</Text>
-            </TouchableOpacity>
-          </View>
+            </TouchableOpacity>          </View>
         </View>
       </View>
 
       {/* Liste des utilisateurs */}
-      <ScrollView>
+      <ScrollView 
+        style={Platform.OS === 'web' ? styles.webScrollView : undefined}
+        contentContainerStyle={Platform.OS === 'web' ? styles.webContainer : undefined}
+      >
         {filteredUsers && filteredUsers.length > 0 ? (
           filteredUsers.map((user) => (
             <View key={user.id_user} style={styles.userCard}>
@@ -309,11 +312,18 @@ const styles = StyleSheet.create({
   updateButtonText: {
     color: '#FFF',
     fontWeight: 'bold',
-  },
-  emptyListText: {
+  },  emptyListText: {
     textAlign: 'center',
     color: '#555',
     marginTop: 20,
     fontSize: 16,
+  },
+  // Styles spécifiques au web
+  webScrollView: {
+    maxHeight: '60vh',
+    overflow: 'auto',
+  },
+  webContainer: {
+    paddingBottom: 20,
   },
 });

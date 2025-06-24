@@ -7,6 +7,7 @@ import {
   Alert,
   TouchableOpacity,
   TextInput,
+  Platform,
 } from 'react-native';
 import {
   getRessourceById,
@@ -177,12 +178,15 @@ export default function Ressource({ route, navigation }) {
       </View>
     );
   }
-
   const youtubeLink = parseYouTubeLink(ressource.content_ressource);
+  const isWeb = Platform.OS === 'web';
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+    <View style={[styles.container, isWeb && styles.webMainContainer]}>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        style={isWeb ? styles.webScrollView : undefined}
+      >
         {isEditing ? (
           <>
             <TextInput
@@ -377,10 +381,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F8FDF8',
-  },
-  errorText: {
+  },  errorText: {
     fontSize: 18,
     color: '#FF5722',
     marginBottom: 20,
+  },
+  // Styles spécifiques au web
+  webMainContainer: {
+    height: '100vh',
+    overflow: 'hidden',
+  },
+  webScrollView: {
+    height: '100%',
+    overflow: 'auto',
   },
 });

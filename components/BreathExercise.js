@@ -7,6 +7,7 @@ import {
   TextInput,
   Alert,
   StyleSheet,
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNav from './BottomNav';
@@ -265,7 +266,6 @@ export default function BreathExercise({ navigation }) {
     const userId = await AsyncStorage.getItem('user_id');
     setIsAuthenticated(!!userId);
   };
-
   useEffect(() => {
     setTimer(getTotalDuration());
     checkAuthentication();
@@ -276,10 +276,12 @@ export default function BreathExercise({ navigation }) {
     return () => clearInterval(intervalRef.current);
   }, [inspiration, retention, expiration, repetitions, isAuthenticated]);
 
+  const isWeb = Platform.OS === 'web';
+
   return (
     <ScrollView
-      style={styles.scroll}
-      contentContainerStyle={styles.container}
+      style={[styles.scroll, isWeb && styles.webScrollView]}
+      contentContainerStyle={[styles.container, isWeb && styles.webContainer]}
       keyboardShouldPersistTaps="handled"
     >
       <Text style={styles.title}>Exercice de Respiration</Text>
@@ -518,5 +520,13 @@ const styles = StyleSheet.create({
   icon: {
     marginBottom: 25,
     marginTop: 15,
+  },
+  // Styles spécifiques au web
+  webScrollView: {
+    height: '100vh',
+    overflow: 'auto',
+  },
+  webContainer: {
+    minHeight: '100vh',
   },
 });

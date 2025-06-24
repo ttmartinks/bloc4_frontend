@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Platform } from 'react-native';
 
 export default function Home({ navigation }) {
+  const isWeb = Platform.OS === 'web';
+  
   return (
-    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+    <ScrollView 
+      contentContainerStyle={[
+        styles.container,
+        isWeb && styles.webContainer
+      ]} 
+      keyboardShouldPersistTaps="handled"
+      style={isWeb ? styles.webScrollView : undefined}
+    >
       <View style={styles.content}>
         <Image source={require('../assets/img/logo_cesizen_big.png')} style={styles.logo_cesi} />
 
@@ -71,5 +80,13 @@ const styles = StyleSheet.create({
     color: '#4CAF50',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  // Styles spécifiques au web
+  webScrollView: {
+    height: '100vh',
+    overflow: 'auto',
+  },
+  webContainer: {
+    minHeight: '100vh',
   }
 });

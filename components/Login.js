@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginUser } from '../fetch/fetchUser';
@@ -34,18 +35,21 @@ export default function Login({ navigation }) {
       AsyncStorage.setItem('token', String(data.token)),
       AsyncStorage.setItem('user_id', String(data.user_id)),
       AsyncStorage.setItem('role_id', String(data.role_id)),
-      ]);
-      Alert.alert('Succès', 'Connexion réussie !');
+      ]);      Alert.alert('Succès', 'Connexion réussie !');
       navigation.navigate('MainPage'); // Rediriger vers la page principale
     } catch (error) {
       Alert.alert('Erreur', error.message || 'Impossible de se connecter.');
     }
   };
 
+  const isWeb = Platform.OS === 'web';
+
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      keyboardShouldPersistTaps="handled">
+    <ScrollView 
+      contentContainerStyle={[styles.container, isWeb && styles.webContainer]}
+      keyboardShouldPersistTaps="handled"
+      style={isWeb ? styles.webScrollView : undefined}
+    >
       <Image
         source={require('../assets/img/logo_cesizen_mini.png')}
         style={styles.logo}
@@ -175,11 +179,18 @@ const styles = StyleSheet.create({
   backButtonWrapper: {
     marginBottom: 60, // Ajout de marginBottom pour éloigner un peu plus le bouton de l'image
     zIndex: 1,
-  },
-  backButton: {
+  },  backButton: {
     fontSize: 20,
     marginTop: 50,
     color: '#4CAF50',
     fontWeight: 'bold',
+  },
+  // Styles spécifiques au web
+  webScrollView: {
+    height: '100vh',
+    overflow: 'auto',
+  },
+  webContainer: {
+    minHeight: '100vh',
   },
 });

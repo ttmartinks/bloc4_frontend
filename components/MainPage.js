@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Platform,
 } from 'react-native';
 import BottomNav from './BottomNav';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -40,12 +41,16 @@ export default function MainPage({ navigation }) {
       return "Welcome !";
     } else {
       return `Welcome back ${userPseudo} !`;
-    }
-  };
+    }  };
+
+  const isWeb = Platform.OS === 'web';
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+    <View style={[styles.container, isWeb && styles.webContainer]}>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        style={isWeb ? styles.webScrollView : undefined}
+      >
         <View style={styles.logoPlaceholder}>
           <Text style={styles.logoText}>🧘‍♀️</Text>
         </View>
@@ -193,9 +198,17 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
     alignSelf: 'flex-start',
-  },
-  buttonText: {
+  },  buttonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  // Styles spécifiques au web
+  webContainer: {
+    height: '100vh',
+    overflow: 'hidden',
+  },
+  webScrollView: {
+    height: '100%',
+    overflow: 'auto',
   },
 });

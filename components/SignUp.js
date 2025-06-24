@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
+import { Image, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, Platform } from 'react-native';
 import { createUser } from '../fetch/fetchUser';
 
 export default function SignUp({ navigation }) {
@@ -48,11 +48,16 @@ export default function SignUp({ navigation }) {
       navigation.navigate('Login'); // Redirige vers la page de connexion
     } catch (error) {
       Alert.alert('Erreur', error.message || 'Une erreur est survenue lors de la création du compte.');
-    }
-  };
+    }  };
+
+  const isWeb = Platform.OS === 'web';
 
   return (
-    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+    <ScrollView 
+      contentContainerStyle={[styles.container, isWeb && styles.webContainer]} 
+      keyboardShouldPersistTaps="handled"
+      style={isWeb ? styles.webScrollView : undefined}
+    >
       <Image source={require('../assets/img/logo_cesizen_mini.png')} style={styles.logo} />
       <Text style={styles.title}>Inscription</Text>
       <Text style={styles.subtitle}>
@@ -174,11 +179,18 @@ const styles = StyleSheet.create({
   backButtonWrapper: {
     marginBottom: 60,
     zIndex: 1,
-  },
-  backButton: {
+  },  backButton: {
     fontSize: 20,
     marginTop: 30,
     color: '#4CAF50',
     fontWeight: 'bold',
+  },
+  // Styles spécifiques au web
+  webScrollView: {
+    height: '100vh',
+    overflow: 'auto',
+  },
+  webContainer: {
+    minHeight: '100vh',
   },
 });

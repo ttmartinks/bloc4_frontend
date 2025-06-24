@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
 
 // Import des composants
 import HomeComponent from './components/Home';
@@ -46,7 +47,15 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
+      <Stack.Navigator 
+        initialRouteName={initialRoute} 
+        screenOptions={{ 
+          headerShown: false,
+          // Configuration pour le web
+          ...(Platform.OS === 'web' && {
+            cardStyle: { flex: 1, overflow: 'auto' }
+          })
+        }}>
         <Stack.Screen name="Home" component={HomeComponent} />
         <Stack.Screen name="Login" component={LoginComponent} />
         <Stack.Screen name="SignUp" component={SignUpComponent} />

@@ -1,0 +1,42 @@
+/* Styles globaux pour React Native Web */
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+#root {
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Assurer que les ScrollView ont un comportement correct sur le web */
+.react-native-web-scrollview {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+  height: 100%;
+}
+
+/* Styles spécifiques pour améliorer le scroll sur le web */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Améliorer l'accessibilité du focus sur le web */
+*:focus {
+  outline: 2px solid #4CAF50;
+  outline-offset: 2px;
+}

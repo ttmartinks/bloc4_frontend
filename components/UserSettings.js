@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
+  Platform,
 } from 'react-native';
 import { getUserById, updateUser } from '../fetch/fetchUser';
 import { getRessourcesUser, getFavoriteRessourcesByUser } from '../fetch/fetchRessource';
@@ -118,7 +119,6 @@ useEffect(() => {
       Alert.alert('Erreur', 'Impossible de se déconnecter.');
     }
   };
-
   if (!user) {
     return (
       <View style={styles.container}>
@@ -127,10 +127,15 @@ useEffect(() => {
     );
   }
 
+  const isWeb = Platform.OS === 'web';
+
   return (
 
-      <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <View style={[styles.container, isWeb && styles.webMainContainer]}>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        style={isWeb ? styles.webScrollView : undefined}
+      >
     
       <Text style={styles.title}>Gestion du compte</Text>
 
@@ -311,10 +316,18 @@ const styles = StyleSheet.create({
   logoutButtonText: {
     color: '#FFF',
     fontWeight: 'bold',
-  },
-  loadingText: {
+  },  loadingText: {
     fontSize: 16,
     textAlign: 'center',
     marginTop: 20,
+  },
+  // Styles spécifiques au web
+  webMainContainer: {
+    height: '100vh',
+    overflow: 'hidden',
+  },
+  webScrollView: {
+    height: '100%',
+    overflow: 'auto',
   },
 });
