@@ -21,13 +21,6 @@ jobs:
       - name: Build web
         run: npx expo export
 
-      - name: Corrige le dossier assets si besoin
-        run: |
-          if [ -d dist/assets/assets/img ]; then
-            mkdir -p dist/assets/img
-            mv dist/assets/assets/img/* dist/assets/img/
-            rm -rf dist/assets/assets
-          fi
 
       - name: Add .nojekyll
         run: touch dist/.nojekyll
