@@ -25,6 +25,10 @@ jobs:
         run: |
           find dist -type f \( -name "*.js" -o -name "*.html" \) -exec sed -i 's|/assets/|/cesizen.github.io/assets/|g' {} +
 
+      - name: Corrige les chemins des scripts dans index.html
+        run: |
+          sed -i 's|src="/_expo/|src="/cesizen.github.io/_expo/|g' dist/index.html
+
       - name: Add .nojekyll
         run: touch dist/.nojekyll
 
