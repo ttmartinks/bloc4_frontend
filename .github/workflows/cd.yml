@@ -21,6 +21,9 @@ jobs:
       - name: Build web
         run: npx expo export
 
+      - name: Corrige les chemins d’assets pour le sous-dossier
+        run: |
+          find dist -type f \( -name "*.js" -o -name "*.html" \) -exec sed -i 's|/assets/|/cesizen.github.io/assets/|g' {} +
 
       - name: Add .nojekyll
         run: touch dist/.nojekyll
