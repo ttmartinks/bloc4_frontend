@@ -2,7 +2,7 @@ import * as Sentry from "@sentry/react-native";
 
 const initSentry = () => {
   Sentry.init({
-    dsn: "https://5c787e9ffe375bb4b753c111b682a45b@o4509582909243392.ingest.de.sentry.io/4509582964031568",
+    dsn: "https://4bbc3a105e57382669c2711d4aa41985@o4509582909243392.ingest.de.sentry.io/4509583276507216",
     
     // Context data (IP, cookies, user info)
     sendDefaultPii: true,
