@@ -3,7 +3,7 @@
 # dependencies
 node_modules/
 
-.env
+.env*
 
 # Expo
 .expo/
@@ -36,5 +36,7 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+.env.local
 
 .env.local

@@ -16,7 +16,7 @@ export default function Home({ navigation }) {
       <View style={styles.content}>
         <Image source={require('../assets/img/logo_cesizen_big.png')} style={styles.logo_cesi} />
 
-  
+  <Button title='Try!' onPress={ () => { Sentry.captureException(new Error('First error')) }}/>
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
           <Text style={styles.buttonText}>Se connecter</Text>
         </TouchableOpacity>
