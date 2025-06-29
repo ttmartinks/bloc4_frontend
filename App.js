@@ -24,7 +24,7 @@ initSentry();
 
 const Stack = createStackNavigator();
 
-export default function App() {
+export default Sentry.wrap(function App() {
   const [initialRoute, setInitialRoute] = useState(null); // État pour la route initiale
 
   useEffect(() => {
@@ -74,4 +74,4 @@ export default function App() {
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+});
