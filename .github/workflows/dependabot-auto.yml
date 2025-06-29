@@ -1,0 +1,62 @@
+name: Dependabot Auto-approve
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  dependabot-validate:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test Expo build
+        run: |
+          echo "Testing Expo build..."
+          npx expo export --platform web
+          echo "✅ Build successful"
+
+      - name: Check update type
+        id: check-update
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          if [[ "$PR_TITLE" =~ (minor|patch) ]]; then
+            echo "safe_update=true" >> $GITHUB_OUTPUT
+            echo "✅ Safe update detected: $PR_TITLE"
+          else
+            echo "safe_update=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Major update detected: $PR_TITLE"
+          fi
+
+      - name: Auto-approve safe updates
+        if: steps.check-update.outputs.safe_update == 'true'
+        run: |
+          gh pr review --approve "${{ github.event.pull_request.number }}"
+          echo "✅ Auto-approved safe dependency update"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+
+      - name: Comment on major updates
+        if: steps.check-update.outputs.safe_update == 'false'
+        run: |
+          gh pr comment "${{ github.event.pull_request.number }}" --body "🚨 **Mise à jour majeure détectée** - Révision manuelle requise avant merge"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+
+      - name: Add security label for vulnerability fixes
+        if: contains(github.event.pull_request.title, 'security')
+        run: |
+          gh pr edit "${{ github.event.pull_request.number }}" --add-label "security-fix"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
