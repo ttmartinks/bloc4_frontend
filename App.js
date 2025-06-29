@@ -4,6 +4,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 
+// Import Sentry et sa config
+import * as Sentry from "@sentry/react-native";
+import initSentry from './utils/config_sentry';
+
 // Import des composants
 import HomeComponent from './components/Home';
 import LoginComponent from './components/Login';
@@ -15,7 +19,8 @@ import RessourceComponent from './components/Ressource';
 import AdminUserComponent from './components/AdminUser';
 import UserSettingsComponent from './components/UserSettings';
 
-
+// Initialiser Sentry
+initSentry();
 
 const Stack = createStackNavigator();
 
@@ -33,6 +38,7 @@ export default function App() {
         }
       } catch (error) {
         console.error('Erreur lors de la vérification du token :', error);
+        Sentry.captureException(error); // Juste cette ligne pour capturer l'erreur
         setInitialRoute('Home'); // En cas d'erreur, définir Home comme route initiale
       }
     };
