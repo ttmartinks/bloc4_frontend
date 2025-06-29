@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Platform } from 'react-native';
+import { View, Text, Button, TouchableOpacity, Image, StyleSheet, ScrollView, Platform } from 'react-native';
 
 export default function Home({ navigation }) {
   const isWeb = Platform.OS === 'web';
