@@ -3,8 +3,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "daily"
       time: "09:00"
     open-pull-requests-limit: 5
     target-branch: "main"
@@ -19,6 +18,19 @@ updates:
         patterns:
           - "expo*"
           - "@expo/*"
+        update-types:
+          - "minor"
+          - "patch"
+      react-updates:
+        patterns:
+          - "react*"
+          - "@react-*"
+        update-types:
+          - "minor"
+          - "patch"
+      sentry-updates:
+        patterns:
+          - "@sentry/*"
         update-types:
           - "minor"
           - "patch"
