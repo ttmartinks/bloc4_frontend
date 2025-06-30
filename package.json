@@ -30,7 +30,7 @@
     "react-test-renderer": "18.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.27.7"
   },
   "private": true,
   "homepage": "https://ttmartinks.github.io/cesizen.github.io/"
