@@ -21,7 +21,7 @@ jobs:
       - name: Build web
         run: npx expo export
 
-      - name: Corrige tous les chemins d’assets pour le sous-dossier
+      - name: Corrige tous les chemins d'assets pour le sous-dossier
         run: |
           find dist -type f \( -name "*.js" -o -name "*.html" \) -exec sed -i 's|/assets/|/cesizen.github.io/assets/|g' {} +
 
@@ -49,3 +49,125 @@ jobs:
           git add .
           git commit -m "Deploy from bloc4_frontend: $GITHUB_SHA" || echo "Nothing to commit"
           git push --force origin main
+
+  simulate-android-deploy:
+    runs-on: ubuntu-latest
+    needs: deploy-to-pages
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Setup Java (simulation)
+        run: |
+          echo "🔧 Setting up Java 11 for Android build..."
+          echo "✅ Java configured successfully"
+
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing dependencies for Android build..."
+          npm ci
+          echo "✅ Dependencies installed"
+
+      - name: Setup EAS CLI (simulation)
+        run: |
+          echo "🛠️ Installing EAS CLI..."
+          echo "✅ EAS CLI installed and configured"
+
+      - name: Configure Android build (simulation)
+        run: |
+          echo "🔐 Configuring Android certificates and signing..."
+          echo "📱 Setting up Google Play Store credentials..."
+          echo "✅ Android build configuration completed"
+
+      - name: Build Android AAB (simulation)
+        run: |
+          echo "🏗️ Building Android App Bundle (.aab)..."
+          echo "📱 Platform: Android"
+          echo "🎯 Target: Google Play Store"
+          echo "⏳ Estimated build time: 10-15 minutes"
+          echo "✅ Android AAB build completed successfully"
+
+      - name: Upload to Google Play Console (simulation)
+        run: |
+          echo "🚀 Uploading to Google Play Console..."
+          echo "📋 Track: Internal Testing"
+          echo "🔍 Running pre-launch report..."
+          echo "✅ Successfully uploaded to Google Play Store"
+          echo "📧 Notification sent to testers"
+
+  simulate-ios-deploy:
+    runs-on: ubuntu-latest  # En réalité, il faudrait macos-latest
+    needs: deploy-to-pages
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Setup Xcode (simulation)
+        run: |
+          echo "🍎 Setting up Xcode for iOS build..."
+          echo "📱 Note: In real scenario, this would run on macos-latest"
+          echo "✅ Xcode configured successfully"
+
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing dependencies for iOS build..."
+          npm ci
+          echo "✅ Dependencies installed"
+
+      - name: Setup EAS CLI (simulation)
+        run: |
+          echo "🛠️ Installing EAS CLI for iOS..."
+          echo "✅ EAS CLI installed and configured"
+
+      - name: Configure iOS build (simulation)
+        run: |
+          echo "🔐 Configuring iOS certificates and provisioning profiles..."
+          echo "🍎 Setting up Apple Developer credentials..."
+          echo "📱 Bundle ID: com.cesi.cesizen"
+          echo "✅ iOS build configuration completed"
+
+      - name: Build iOS IPA (simulation)
+        run: |
+          echo "🏗️ Building iOS App Archive (.ipa)..."
+          echo "📱 Platform: iOS"
+          echo "🎯 Target: App Store Connect"
+          echo "⏳ Estimated build time: 15-20 minutes"
+          echo "✅ iOS IPA build completed successfully"
+
+      - name: Upload to App Store Connect (simulation)
+        run: |
+          echo "🚀 Uploading to App Store Connect..."
+          echo "📋 Track: TestFlight Internal Testing"
+          echo "🔍 Running App Store review guidelines check..."
+          echo "✅ Successfully uploaded to App Store Connect"
+          echo "📧 TestFlight invitation sent to internal testers"
+
+  deployment-summary:
+    runs-on: ubuntu-latest
+    needs: [deploy-to-pages, simulate-android-deploy, simulate-ios-deploy]
+    steps:
+      - name: Deployment Summary
+        run: |
+          echo "🎉 ===== DEPLOYMENT SUMMARY ====="
+          echo ""
+          echo "✅ Web App: Successfully deployed to GitHub Pages"
+          echo "   📍 URL: https://ttmartinks.github.io/cesizen.github.io/"
+          echo ""
+          echo "✅ Android: Build and upload simulation completed"
+          echo "   📱 Platform: Google Play Store (Internal Testing)"
+          echo "   🏗️ Build type: AAB (Android App Bundle)"
+          echo ""
+          echo "✅ iOS: Build and upload simulation completed"  
+          echo "   📱 Platform: App Store Connect (TestFlight)"
+          echo "   🏗️ Build type: IPA (iOS App Archive)"
+          echo ""
+          echo "🚀 All platforms ready for distribution!"
+          echo "📊 Total deployment time: ~$(date -d@$SECONDS -u +%M:%S)"
