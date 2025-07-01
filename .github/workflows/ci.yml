@@ -16,21 +16,31 @@ env:
 jobs:
   branch-name-check:
     runs-on: ubuntu-latest
+    # Ignorer le check pour Dependabot
+    if: github.actor != 'dependabot[bot]'
     steps:
-      - name: Check branch name
-        if: github.actor != 'dependabot[bot]'
-        uses: lekterable/branchlint-action@2.1.0
-        with:
-          allowed: |
-            /^feature_[a-zA-Z0-9_\-]+$/
-            /^fix_[a-zA-Z0-9_\-]+$/
-            main
-          errorMessage: "❌ Le nom de la branche doit commencer par 'feature_' ou 'fix_' (ex: feature_login, fix_bug123)."
-      
-      - name: Allow Dependabot branches
-        if: github.actor == 'dependabot[bot]'
-        run: echo "✅ Dependabot PR - skipping branch name validation"
-
+      - name: Check branch name format
+        run: |
+          echo "🔍 Vérification du nom de branche: ${{ github.head_ref }}"
+          
+          # Définir les patterns autorisés
+          BRANCH_NAME="${{ github.head_ref }}"
+          
+          # Vérifier si la branche correspond aux patterns autorisés
+          if [[ "$BRANCH_NAME" =~ ^feat_[a-zA-Z0-9_-]+$ ]] || \
+             [[ "$BRANCH_NAME" =~ ^fix_[a-zA-Z0-9_-]+$ ]] || \
+             [[ "$BRANCH_NAME" == "dev" ]] || \
+             [[ "$BRANCH_NAME" == "main" ]]; then
+            echo "✅ Nom de branche valide: $BRANCH_NAME"
+          else
+            echo "❌ Nom de branche invalide: $BRANCH_NAME"
+            echo ""
+            echo "📋 Formats autorisés :"
+            echo "• feat/nom-fonctionnalite"
+            echo "• fix/nom-correction"
+            exit 1
+          fi
+        
   sonarqube:
     runs-on: ubuntu-latest
     needs: branch-name-check
