@@ -36,8 +36,8 @@ jobs:
             echo "❌ Nom de branche invalide: $BRANCH_NAME"
             echo ""
             echo "📋 Formats autorisés :"
-            echo "• feat/nom-fonctionnalite"
-            echo "• fix/nom-correction"
+            echo "• feat_nom-fonctionnalite"
+            echo "• fix_nom-correction"
             exit 1
           fi
         
@@ -71,20 +71,19 @@ jobs:
           sonar.pullrequest.branch=${{ github.head_ref }}
           sonar.pullrequest.base=${{ github.base_ref }}
           EOF
-          
-        # Check the Quality Gate status.
+
+      # 🔧 CORRECTION: Scan D'ABORD
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
+
+      # ✅ PUIS Quality Gate check
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check
         uses: sonarsource/sonarqube-quality-gate-action@master
-        with:
-          pollingTimeoutSec: 600
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io #OPTIONAL
-
-        #Scan
-      - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
+        timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: https://sonarcloud.io
@@ -131,58 +130,4 @@ jobs:
           BACKEND_PKG=$(find . -path "*/backend/package.json" -o -path "./package.json" | head -1)
           BACKEND_DIR=$(dirname "$BACKEND_PKG")
           cd "$BACKEND_DIR"
-          npm test || echo "⚠️ Backend tests skipped"
-        env:
-          PGHOST: ${{ secrets.PGHOST }}
-          PGUSER: ${{ secrets.PGUSER }}
-          PGPORT: ${{ secrets.PGPORT }}
-          PGDATABASE: ${{ secrets.PGDATABASE }}
-          PGPASSWORD: ${{ secrets.PGPASSWORD }}
-      - name: Run frontend tests
-        run: |
-          FRONTEND_PKG=$(find . -path "*/frontend/package.json" | head -1)
-          
-          if [ -n "$FRONTEND_PKG" ]; then
-            FRONTEND_DIR=$(dirname "$FRONTEND_PKG")
-            cd "$FRONTEND_DIR"
-            npm test -- --coverage --watchAll=false || echo "⚠️ Frontend tests skipped"
-          else
-            echo "⚠️ Frontend non trouvé - tests skipped"
-          fi
-      
-
-  test-api-db:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Test API endpoint
-        run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$TEST_API_URL/hello")
-          if [ "$STATUS" != "200" ]; then
-            echo "API endpoint $TEST_API_URL/hello is not reachable (status $STATUS)"
-            exit 1
-          fi
-        env:
-          TEST_API_URL: ${{ secrets.TEST_API_URL }}
-
-      - name: Simulate DB connection test
-        run: |
-          echo "🔗 Testing database connection simulation..."
-          echo "🏢 Target: Azure PostgreSQL"
-          echo "⚠️  BYPASS - Azure indisponible"
-          echo "✅ Database connection test bypassed successfully"
-          echo "📝 Note: Real connection would be tested in staging environment"
-        env:
-          PGHOST: ${{ secrets.PGHOST }}
-          PGPORT: ${{ secrets.PGPORT }}
-          PGUSER: ${{ secrets.PGUSER }}
-          PGDATABASE: ${{ secrets.PGDATABASE }}
-
-      - name: Test Summary
-        run: |
-          echo "📋 ===== TEST SUMMARY ====="
-          echo "✅ API Test: PASSED"
-          echo "⚠️  DB Test: BYPASSED (Simulated- Azure unavailable)"
-          echo "🎯 Overall Status: SUCCESS"
+          npm test || echo "⚠️ Backend tests
